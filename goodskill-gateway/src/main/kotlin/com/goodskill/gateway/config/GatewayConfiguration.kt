@@ -53,6 +53,11 @@ open class GatewayConfiguration {
                     }
                     .uri("lb://goodskill-service-provider")
             }
+            .route { r: PredicateSpec ->
+                r.after(ZonedDateTime.now().plusSeconds(2L)).and()
+                    .path("/goodskill/web/**")
+                    .uri("lb://goodskill-web")
+            }
             .build()
     }
 

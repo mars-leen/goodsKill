@@ -1,11 +1,11 @@
+# 🎉前言
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5d394c3d07b148b189e89fd60ef91a93)](https://app.codacy.com/gh/techa03/goodsKill?utm_source=github.com&utm_medium=referral&utm_content=techa03/goodsKill&utm_campaign=Badge_Grade)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Build Status](https://travis-ci.org/techa03/goodsKill.svg?branch=master)](https://travis-ci.org/techa03/goodsKill)
 [![codecov](https://codecov.io/gh/techa03/goodsKill/branch/master/graph/badge.svg)](https://codecov.io/gh/techa03/goodsKill)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=techa03_goodsKill&metric=alert_status)](https://sonarcloud.io/dashboard?id=techa03_goodsKill)
+[![CodeQL](https://github.com/techa03/goodsKill/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/techa03/goodsKill/actions/workflows/codeql-analysis.yml)
 
-
-# 🎉前言
 项目命名为**goodsKill**一方面有商品秒杀项目的意思(好像有点chinglish的味道)，另外也可理解为**good skill**，本项目就是希望搭建一套完整的项目框架，把一些好的技术和技巧整合进来（偏向于后端技术），方便学习和查阅。
 
 本项目为慕课网仿购物秒杀网站,系统分为用户注册登录、秒杀商品管理模块。注册登录功能目前使用shiro完成权限验证，支持OAuth2.0第三方授权登录（目前可通过Gitee，Github进行授权）。 此项目整体采用springMVC+RESTFUL风格，mybatis持久层框架，采用springcloud dubbo实现服务分布式服务调用，服务注册发现使用nacos server。
@@ -41,7 +41,7 @@ Logback | 日志组件  | [https://logback.qos.ch/](https://logback.qos.ch/)
 Protobuf & json | 数据序列化  | [https://github.com/google/protobuf](https://github.com/google/protobuf)
 Maven | 项目构建管理  | [http://maven.apache.org/](http://maven.apache.org/)
 SonarQube | 项目代码质量监控 | [https://www.sonarqube.org/](https://www.sonarqube.org/)
-Swagger2 | 项目API文档生成及测试工具 | [http://swagger.io/](http://swagger.io/)
+Swagger3 | 项目API文档生成及测试工具 | [http://swagger.io/](http://swagger.io/)
 Mockito | mock类生成测试工具 | [https://site.mockito.org/](https://site.mockito.org/)
 Jacoco | 测试覆盖率报告插件 | [http://www.eclemma.org/jacoco/](http://www.eclemma.org/jacoco/)
 Shiro | 用户权限安全管理框架 | [https://shiro.apache.org/](https://shiro.apache.org/)
@@ -104,9 +104,9 @@ goodsKill
 - Sharding-JDBC: 4.1.1
 - RabbitMQ: 3.8.5+
 - SpringCloud: 2020.0.x
-- SpringBoot: 2.4.x
+- SpringBoot: 2.5.x
 - SpringCloudAlibaba: 2021.x
-- Kotlin: 1.4.21
+- Kotlin: 1.5.x
 - NacosServer: 1.4.1
 - SeataServer: 1.4.1
 
@@ -146,7 +146,6 @@ goodsKill
   Kibana | 7.10.1 | 5601 | 无
   RabbitMQ | latest | 5672 15672 | 无
   Zipkin | latest | 9411 | 无
-  SeataServer | latest | 8091 | 无
 
 
 **注**:除以上镜像外，<code>docker-compose.yml</code>文件还包含项目构建命令，目前暂未列出。
@@ -174,6 +173,8 @@ docker-compose -f goodskill-simple.yml up -d
      127.0.0.1       elasticsearch
      127.0.0.1       rabbitmq
      127.0.0.1       zipkin
+     ##如果网关服务部署在远程机器，此处改为相应的远程机器ip
+     127.0.0.1       www.goodskill.com
      ```
 
 - 进入<code>goodsKill-web</code>模块根目录，运行命令或直接通过<code>SampleWebJspApplication</code>类main方法启动
@@ -189,7 +190,7 @@ docker-compose -f goodskill-simple.yml up -d
 
   **注**:docker-compose启动方式会自动执行初始化脚本，因此无需执行该步骤
 
-- 启动完成后访问登录页面[http://localhost:8080/goodskill/login](http://localhost:8080/goodskill/login)，默认管理员账号admin123，密码：aa123456
+- 启动完成后访问登录页面[http://www.goodskill.com/goodskill/web/login](http://www.goodskill.com/goodskill/web/login)，默认管理员账号admin123，密码：aa123456
 
 > #### 额外功能（可选）
 - 已集成`sentinel`限流组件，支持`nacos`配置中心方式推送限流规则，使用时需启动`sentinel`控制台，并以`18088`端口启动，docker环境暂不支持。
@@ -244,20 +245,18 @@ success_killed | MySQL | 是（同一服务器中，分为seckill和seckill_01�
 **注**:其他表均未分库分表，默认使用seckill作为主库
 
 ## 🔖服务网关说明
-- http://localhost/goodskill/mongo 对应`goodsKill-mongo-provider`服务
-- http://localhost/goodskill/es 对应`goodsKill-es-provider`服务
-- http://localhost/goodskill/seata 对应`goodskill-seata`服务
-- http://localhost/goodskill/common 对应`goodsKill-service-provider`服务
+- http://www.goodskill.com/goodskill/mongo 对应`goodsKill-mongo-provider`服务
+- http://www.goodskill.com/goodskill/es 对应`goodsKill-es-provider`服务
+- http://www.goodskill.com/goodskill/seata 对应`goodskill-seata`服务
+- http://www.goodskill.com/goodskill/common 对应`goodsKill-service-provider`服务
 
-- 通过[http://localhost/goodskill/token](http://localhost/goodskill/token)接口获取token
-- 通过[http://localhost/goodskill/refresh](http://localhost/goodskill/refresh)刷新用户token
+- 通过[http://www.goodskill.com/goodskill/common/token](http://www.goodskill.com/goodskill/common/token)接口获取token
+- 通过[http://www.goodskill.com/goodskill/common/refresh](http://www.goodskill.com/goodskill/common/refresh)刷新用户token
 
 ## 🔥🔥秒杀方案
 目前实现了几种秒杀方案，通过`SeckillMockController`提供测试接口
 
-swagger主页测试地址: http://localhost:8080/goodskill/swagger-ui.html#/
-
-swagger增强主页测试地址: http://localhost:8080/goodskill/doc.html
+swagger主页测试地址: http://www.goodskill.com/goodskill/web/swagger-ui/index.html
 
 kafka状态监控页面地址: http://localhost:9000
 
